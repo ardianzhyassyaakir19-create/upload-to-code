@@ -24,9 +24,14 @@ export default function UsersPage() {
   const { data: users } = useQuery({
     queryKey: ['users-list'],
     queryFn: async () => {
-      const { data, error } = await supabase.from('profiles').select('*, user_roles(role)').order('created_at', { ascending: false });
-      if (error) throw error;
-      return data;
+      const { data: profiles, error: pErr } = await supabase.from('profiles').select('*').order('created_at', { ascending: false });
+      if (pErr) throw pErr;
+      const { data: roles, error: rErr } = await supabase.from('user_roles').select('*');
+      if (rErr) throw rErr;
+      return (profiles || []).map(p => ({
+        ...p,
+        user_roles: (roles || []).filter(r => r.user_id === p.id),
+      }));
     },
   });
 
