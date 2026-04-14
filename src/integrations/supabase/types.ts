@@ -14,16 +14,257 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      alat: {
+        Row: {
+          created_at: string
+          deskripsi: string | null
+          id: string
+          jumlah: number
+          kategori_id: string | null
+          kode_alat: string
+          kondisi: string
+          nama: string
+          tersedia: boolean
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          deskripsi?: string | null
+          id?: string
+          jumlah?: number
+          kategori_id?: string | null
+          kode_alat: string
+          kondisi?: string
+          nama: string
+          tersedia?: boolean
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          deskripsi?: string | null
+          id?: string
+          jumlah?: number
+          kategori_id?: string | null
+          kode_alat?: string
+          kondisi?: string
+          nama?: string
+          tersedia?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alat_kategori_id_fkey"
+            columns: ["kategori_id"]
+            isOneToOne: false
+            referencedRelation: "kategori"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kategori: {
+        Row: {
+          created_at: string
+          deskripsi: string | null
+          id: string
+          nama: string
+        }
+        Insert: {
+          created_at?: string
+          deskripsi?: string | null
+          id?: string
+          nama: string
+        }
+        Update: {
+          created_at?: string
+          deskripsi?: string | null
+          id?: string
+          nama?: string
+        }
+        Relationships: []
+      }
+      log_aktivitas: {
+        Row: {
+          aksi: string
+          created_at: string
+          detail: string | null
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          aksi: string
+          created_at?: string
+          detail?: string | null
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          aksi?: string
+          created_at?: string
+          detail?: string | null
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      peminjaman: {
+        Row: {
+          alat_id: string
+          catatan: string | null
+          created_at: string
+          disetujui_oleh: string | null
+          id: string
+          jumlah: number
+          peminjam_id: string
+          status: string
+          tanggal_kembali_rencana: string
+          tanggal_pinjam: string
+          updated_at: string
+        }
+        Insert: {
+          alat_id: string
+          catatan?: string | null
+          created_at?: string
+          disetujui_oleh?: string | null
+          id?: string
+          jumlah?: number
+          peminjam_id: string
+          status?: string
+          tanggal_kembali_rencana: string
+          tanggal_pinjam?: string
+          updated_at?: string
+        }
+        Update: {
+          alat_id?: string
+          catatan?: string | null
+          created_at?: string
+          disetujui_oleh?: string | null
+          id?: string
+          jumlah?: number
+          peminjam_id?: string
+          status?: string
+          tanggal_kembali_rencana?: string
+          tanggal_pinjam?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "peminjaman_alat_id_fkey"
+            columns: ["alat_id"]
+            isOneToOne: false
+            referencedRelation: "alat"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pengembalian: {
+        Row: {
+          created_at: string
+          denda: number
+          diterima_oleh: string | null
+          id: string
+          keterangan: string | null
+          kondisi_alat: string
+          peminjaman_id: string
+          tanggal_kembali: string
+        }
+        Insert: {
+          created_at?: string
+          denda?: number
+          diterima_oleh?: string | null
+          id?: string
+          keterangan?: string | null
+          kondisi_alat?: string
+          peminjaman_id: string
+          tanggal_kembali?: string
+        }
+        Update: {
+          created_at?: string
+          denda?: number
+          diterima_oleh?: string | null
+          id?: string
+          keterangan?: string | null
+          kondisi_alat?: string
+          peminjaman_id?: string
+          tanggal_kembali?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pengembalian_peminjaman_id_fkey"
+            columns: ["peminjaman_id"]
+            isOneToOne: false
+            referencedRelation: "peminjaman"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string
+          id: string
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name?: string
+          id: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string
+          id?: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_role: {
+        Args: { _user_id: string }
+        Returns: Database["public"]["Enums"]["app_role"]
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      log_activity: {
+        Args: { _aksi: string; _detail?: string; _user_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "petugas" | "peminjam"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +391,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "petugas", "peminjam"],
+    },
   },
 } as const
